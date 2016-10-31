@@ -1,5 +1,9 @@
 package com.matthias.presentationlayer;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +17,7 @@ import org.opencv.android.OpenCVLoader;
 public class MainActivity extends AppCompatActivity
 {
 	private final static String LOGTAG = "MainActivity";
+	private int MY_PERMISSIONS_REQUEST_READ_AND_WRITE_EXTERNAL_STORAGE;     // is used in requestStoragePermission()
 
 	// buttons
 	private Button btn_openAirPhoto;
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 
 		setupButtons();
+
+		requestStoragePermission();
 	}
 
 	private void setupButtons()
@@ -35,6 +42,22 @@ public class MainActivity extends AppCompatActivity
 		btn_openAirVideo.setOnClickListener(openAirVideoListener);
 	}
 
+	// request permission ... required for API 23 or above
+	private void requestStoragePermission()
+	{
+		if ((ContextCompat.checkSelfPermission(MainActivity.this,
+				Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+				|| (ContextCompat.checkSelfPermission(MainActivity.this,
+				Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED))
+
+		{
+			ActivityCompat.requestPermissions
+					(MainActivity.this, new String[]{
+							Manifest.permission.READ_EXTERNAL_STORAGE,
+							Manifest.permission.WRITE_EXTERNAL_STORAGE
+					}, MY_PERMISSIONS_REQUEST_READ_AND_WRITE_EXTERNAL_STORAGE);
+		}
+	}
 	// ============================================================================================================
 	// Button Click Listeners
 	// ============================================================================================================

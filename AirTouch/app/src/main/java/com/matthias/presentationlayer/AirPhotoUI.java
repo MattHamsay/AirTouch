@@ -258,16 +258,37 @@ public class AirPhotoUI extends AppCompatActivity
 
 			try
 			{
-				Uri selectedImageUri = data.getData();
-				String[] projection = {MediaStore.MediaColumns.DATA };
-				CursorLoader cursorLoader = new CursorLoader(this, selectedImageUri, projection, null, null,
-				                                             null);
-				Cursor cursor =cursorLoader.loadInBackground();
+//				Uri selectedImageUri = data.getData();
+//				String[] projection = {MediaStore.MediaColumns.DATA };
+//				CursorLoader cursorLoader = new CursorLoader(this, selectedImageUri, projection, null, null,
+//				                                             null);
+//				Cursor cursor =cursorLoader.loadInBackground();
+//				int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+//				cursor.moveToFirst();
+//				String selectedImagePath = cursor.getString(column_index);
+//
+//				Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath);
+
+				Uri selectedImageUri;
+				selectedImageUri = data.getData();
+				String[] projection = {MediaStore.MediaColumns.DATA};
+				Cursor cursor = managedQuery(selectedImageUri, projection, null, null, null);
 				int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
 				cursor.moveToFirst();
-				String selectedImagePath = cursor.getString(column_index);
 
-				Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath);
+				String filePath = cursor.getString(column_index);
+
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				BitmapFactory.decodeFile(filePath, options);
+				final int REQUIRED_SIZE = 200;
+				int scale = 1;
+				while (options.outWidth / scale / 2 >= REQUIRED_SIZE
+						&& options.outHeight / scale / 2 >= REQUIRED_SIZE)
+					scale *= 2;
+				options.inSampleSize = scale;
+				options.inJustDecodeBounds = false;
+				Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
 
 				processBitmap(bitmap, index);
 			}
