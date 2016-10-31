@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity
 {
 	private final static String LOGTAG = "MainActivity";
 	private int MY_PERMISSIONS_REQUEST_READ_AND_WRITE_EXTERNAL_STORAGE;     // is used in requestStoragePermission()
+	private int MY_PERMISSIONS_REQUEST_CAMERA;
 
 	// buttons
 	private Button btn_openAirPhoto;
@@ -56,6 +57,15 @@ public class MainActivity extends AppCompatActivity
 							Manifest.permission.READ_EXTERNAL_STORAGE,
 							Manifest.permission.WRITE_EXTERNAL_STORAGE
 					}, MY_PERMISSIONS_REQUEST_READ_AND_WRITE_EXTERNAL_STORAGE);
+		}
+
+		if (ContextCompat.checkSelfPermission(MainActivity.this,
+				Manifest.permission.CAMERA)
+				!= PackageManager.PERMISSION_GRANTED) {
+
+			ActivityCompat.requestPermissions(MainActivity.this,
+					new String[]{Manifest.permission.CAMERA},
+					MY_PERMISSIONS_REQUEST_CAMERA);
 		}
 	}
 	// ============================================================================================================
